@@ -10,8 +10,7 @@ public func configure(_ app: Application) async throws {
     // app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
     // register routes
     
-    app.databases.use(.postgres(hostname: "localhost",  username: "postgres", password: "", database: "grocerydb"), as:
-            .psql)
+    app.databases.use(.postgres(hostname: Environment.get("DB_HOST_NAME") ?? "localhost",  username: Environment.get("DB_USER_NAME") ?? "postgres", password: Environment.get("DB_PASSWORD") ?? "", database: Environment.get("DB_NAME") ?? "grocerydb"), as: .psql)
     
     //register migrations
     app.migrations.add(CreateUsersTableMigration())
@@ -22,7 +21,7 @@ public func configure(_ app: Application) async throws {
     try app.register(collection: UserController())
     try app.register(collection: GroceryController())
     
-    app.jwt.signers.use(.hs256(key: "SECRETKEY"))
+    app.jwt.signers.use(.hs256(key: Environment.get("JWT_SIGN_KEY") ?? "SECRETKEY"))
     
     //register routes
     try routes(app)
