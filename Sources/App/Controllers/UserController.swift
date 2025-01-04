@@ -70,6 +70,7 @@ class UserController: RouteCollection {
         try await user.save(on: req.db)
         
         
+        
         return RegisterResponseDTO(error: false)
         
     }
