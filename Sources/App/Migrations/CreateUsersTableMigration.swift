@@ -14,7 +14,7 @@ struct CreateUsersTableMigration: AsyncMigration {
             .id()
             .field("username", .string, .required).unique(on: "username")
             .field("password", .string, .required)
-            .field("email", .string, .required)
+            //.field("email", .string, .required)
             .create()
     }
     //undo
