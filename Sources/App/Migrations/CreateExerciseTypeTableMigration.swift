@@ -12,7 +12,7 @@ struct CreateExerciseTypeTableMigration: AsyncMigration {
     func prepare(on database: Database) async throws {
         try await database.schema("exercise")
             .id()
-            .field("exercise", .string, .required).unique(on: "exercise")
+            .field("exerciseName", .string, .required).unique(on: "exerciseName")
             .field("category", .string, .required)
             //.field("email", .string, .required)
             .create()
