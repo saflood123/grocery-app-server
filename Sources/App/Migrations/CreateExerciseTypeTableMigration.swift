@@ -8,7 +8,7 @@
 import Foundation
 import Fluent
 
-struct CreateExerciseTableMigration: AsyncMigration {
+struct CreateExerciseTypeTableMigration: AsyncMigration {
     func prepare(on database: Database) async throws {
         try await database.schema("exercise")
             .id()

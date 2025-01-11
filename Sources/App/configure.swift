@@ -10,27 +10,29 @@ public func configure(_ app: Application) async throws {
     // app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
     // register routes
     
-//    if let databaseURL = Environment.get("DATABASE_URL") {
-//        var tlsConfig: TLSConfiguration = .makeClientConfiguration()
-//        tlsConfig.certificateVerification = .none
-//        let nioSSLContext = try NIOSSLContext(configuration: tlsConfig)
-//
-//        var postgresConfig = try SQLPostgresConfiguration(url: databaseURL)
-//        postgresConfig.coreConfiguration.tls = .require(nioSSLContext)
-//
-//        app.databases.use(.postgres(configuration: postgresConfig), as: .psql)
-//    } else {
-//        app.databases.use(.postgres(hostname: Environment.get("DB_HOST_NAME") ?? "localhost",  username: Environment.get("DB_USER_NAME") ?? "postgres", password: Environment.get("DB_PASSWORD") ?? "", database: Environment.get("DB_NAME") ?? "grocerydb"), as: .psql)
-//    }
+    if let databaseURL = Environment.get("DATABASE_URL") {
+        var tlsConfig: TLSConfiguration = .makeClientConfiguration()
+        tlsConfig.certificateVerification = .none
+        let nioSSLContext = try NIOSSLContext(configuration: tlsConfig)
+
+        var postgresConfig = try SQLPostgresConfiguration(url: databaseURL)
+        postgresConfig.coreConfiguration.tls = .require(nioSSLContext)
+
+        app.databases.use(.postgres(configuration: postgresConfig), as: .psql)
+    } else {
+        app.databases.use(.postgres(hostname: Environment.get("DB_HOST_NAME") ?? "localhost",  username: Environment.get("DB_USER_NAME") ?? "postgres", password: Environment.get("DB_PASSWORD") ?? "", database: Environment.get("DB_NAME") ?? "grocerydb"), as: .psql)
+    }
     
-//    app.databases.use(.postgres(hostname: Environment.get("DB_HOST_NAME") ?? "localhost",  username: Environment.get("DB_USER_NAME") ?? "postgres", password: Environment.get("DB_PASSWORD") ?? "", database: Environment.get("DB_NAME") ?? "grocerydb"), as: .psql)
+    app.databases.use(.postgres(hostname: Environment.get("DB_HOST_NAME") ?? "localhost",  username: Environment.get("DB_USER_NAME") ?? "postgres", password: Environment.get("DB_PASSWORD") ?? "", database: Environment.get("DB_NAME") ?? "grocerydb"), as: .psql)
     
-    app.databases.use(.postgres(hostname: "localhost",  username:  "postgres", password:  "", database: "grocerydb"), as: .psql)
+//    app.databases.use(.postgres(hostname: "localhost",  username:  "postgres", password:  "", database: "grocerydb"), as: .psql)
     
     //register migrations
     app.migrations.add(CreateUsersTableMigration())
     app.migrations.add(CreateGroceryCategoryTableMigration())
     app.migrations.add(CreateGroceryItemTableMigration())
+    app.migrations.add(CreateGroceryItemTableMigration())
+    app.migrations.add(CreateExerciseTypeTableMigration())
     
     //register controllers
     try app.register(collection: UserController())
