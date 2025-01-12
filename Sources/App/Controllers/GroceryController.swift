@@ -37,6 +37,12 @@ class GroceryController: RouteCollection {
         // DELETE /api/users/:userid/grocery_categories/:groceryCategoryId/grocery-items/"groceryitemId
         api.delete("grocery-categories", ":groceryCategoryId", "grocery-items", ":groceryItemId", use: deleteGroceryItem)
         
+        // get: /api/exercises
+        api.get("exercise", use: getExercises)
+        
+    }
+    func getExercises(req: Request) async throws -> [Exercise] {
+        return try await Exercise.query(on: req.db).all()
     }
     
     func deleteGroceryItem(req: Request) async throws -> GroceryItemResponseDTO {

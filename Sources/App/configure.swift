@@ -34,7 +34,7 @@ public func configure(_ app: Application) async throws {
     app.migrations.add(CreateGroceryCategoryTableMigration())
     app.migrations.add(CreateGroceryItemTableMigration())
 //    app.migrations.add(CreateGroceryItemTableMigration())
-   // app.migrations.add(CreateExerciseTypeTableMigration())
+    app.migrations.add(CreateExerciseTypeTableMigration())
     
     //register controllers
     try app.register(collection: UserController())
