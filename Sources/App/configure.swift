@@ -25,7 +25,9 @@ public func configure(_ app: Application) async throws {
     
     app.databases.use(.postgres(hostname: Environment.get("DB_HOST_NAME") ?? "localhost",  username: Environment.get("DB_USER_NAME") ?? "postgres", password: Environment.get("DB_PASSWORD") ?? "", database: Environment.get("DB_NAME") ?? "grocerydb"), as: .psql)
     
-//    app.databases.use(.postgres(hostname: "localhost",  username:  "postgres", password:  "", database: "grocerydb"), as: .psql)
+//  app.databases.use(.postgres(hostname: "localhost",  username:  "postgres", password:  "", database: "grocerydb"), as: .psql)
+    
+//    try app.databases.use(.postgres(configuration: SQLPostgresConfiguration(hostname: "localhost", username: "postgres", password: "", database: "grocerydb", tls: .prefer(try .init(configuration: .clientDefault)))), as: .psql)
     
     //register migrations
     app.migrations.add(CreateUsersTableMigration())
