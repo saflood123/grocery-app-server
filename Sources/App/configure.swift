@@ -40,6 +40,7 @@ public func configure(_ app: Application) async throws {
     
     //app.jwt.signers.use(.hs256(key: Environment.get("JWT_SIGN_KEY") ?? "SECRETKEY"))
     
+    
     //register routes
     try routes(app)
 }
