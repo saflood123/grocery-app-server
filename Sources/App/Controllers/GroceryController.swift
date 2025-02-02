@@ -32,7 +32,7 @@ class GroceryController: RouteCollection {
         api.post("grocery-categories", ":groceryCategoryId", "grocery-items", use: saveGroceryItem)
         
         // post: /api/users/:userid/grocery_categories/:groceryCategoryId/grocery-items
-        //api.post("exercise-items", use: saveExerciseItem)
+        api.post("grocery-categories", ":groceryCategoryId","exercise-items", use: saveExerciseItem)
         
         // get: /api/users/:userid/grocery_categories/:groceryCategoryId/grocery-items
         api.get("grocery-categories", ":groceryCategoryId", "grocery-items", use: getGroceryItemsByGroceryCategory)
@@ -76,23 +76,23 @@ class GroceryController: RouteCollection {
             return groceryItemResponseDTO
         }
     }
-//        func saveExerciseItem(req: Request) async throws -> ExerciseResponseDTO {
-//            
-//            
-//            //decoding // groceryItemRequestDTo
-//            let exerciseRequestDTO = try req.content.decode(ExerciseRequestDTO.self)
-//            
-//            let exerciseItem = ExerciseItem(title: exerciseRequestDTO.gender, price: exerciseRequestDTO.age, weight: exerciseRequestDTO.weight)
-//            
-//            
-//            try await exerciseItem.save(on: req.db)
-//            
-//            guard let exerciseItemResponseDTO = ExerciseResponseDTO(exerciseItem) else {
-//                throw Abort(.internalServerError)
-//            }
-//            
-//           return exerciseItemResponseDTO
-//        }
+        func saveExerciseItem(req: Request) async throws -> ExerciseResponseDTO {
+            
+            
+            //decoding // groceryItemRequestDTo
+            let exerciseRequestDTO = try req.content.decode(ExerciseRequestDTO.self)
+            
+            let exerciseItem = ExerciseItem(gender: exerciseRequestDTO.gender, age: exerciseRequestDTO.age, weight: exerciseRequestDTO.weight)
+            
+            
+            try await exerciseItem.save(on: req.db)
+            
+            guard let exerciseItemResponseDTO = ExerciseResponseDTO(exerciseItem) else {
+                throw Abort(.internalServerError)
+            }
+            
+           return exerciseItemResponseDTO
+        }
     func deleteGroceryItem(req: Request) async throws -> GroceryItemResponseDTO {
         
         guard let userId = req.parameters.get("userId", as: UUID.self),

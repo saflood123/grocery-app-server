@@ -10,15 +10,16 @@ import Fluent
 
 struct CreateExerciseTypeTableMigration: AsyncMigration {
     func prepare(on database: Database) async throws {
-        try await database.schema("exercises")
+        try await database.schema("exercise_items")
             .id()
-            .field("exerciseName", .string, .required).unique(on: "exerciseName")
-            .field("category", .string, .required)
+            .field("gender", .string, .required)//.unique(on: "exerciseName")
+            .field("age", .string, .required)
+            .field("weight", .string, .required)
             .create()
     }
     //undo
     func revert(on database: Database) async throws {
-        try await database.schema("exercise")
+        try await database.schema("exercise_items")
             .delete()
     }
 }
