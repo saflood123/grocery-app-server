@@ -78,11 +78,26 @@ class GroceryController: RouteCollection {
     }
         func saveExerciseItem(req: Request) async throws -> ExerciseResponseDTO {
             
-            
+            guard let userId = req.parameters.get("userId", as: UUID.self),
+                  let exerciseId = req.parameters.get("exerciseId", as: UUID.self)   else {
+                throw Abort(.badRequest)
+                
+            }
+            //find the user
+            guard let _ = try await User.find(userId, on: req.db) else {
+                throw Abort(.notFound)
+            }
+            //find the grocery category
+            guard let exerciseItemUser = try await ExerciseItem.query(on: req.db)
+                .filter(\.$user.$id == userId)
+                .filter(\.$id == exerciseId)
+                .first() else {
+                throw Abort(.notFound)
+            }
             //decoding // groceryItemRequestDTo
             let exerciseRequestDTO = try req.content.decode(ExerciseRequestDTO.self)
             
-            let exerciseItem = ExerciseItem(gender: exerciseRequestDTO.gender, age: exerciseRequestDTO.age, weight: exerciseRequestDTO.weight)
+            let exerciseItem = ExerciseItem(gender: exerciseRequestDTO.gender, age: exerciseRequestDTO.age, weight: exerciseRequestDTO.weight, userId: <#T##UUID#>)
             
             
             try await exerciseItem.save(on: req.db)

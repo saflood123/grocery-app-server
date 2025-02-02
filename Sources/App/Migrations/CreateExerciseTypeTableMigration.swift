@@ -15,6 +15,7 @@ struct CreateExerciseTypeTableMigration: AsyncMigration {
             .field("gender", .string, .required)//.unique(on: "exerciseName")
             .field("age", .string, .required)
             .field("weight", .string, .required)
+            .field("user_id", .uuid, .required, .references("users","id"))
             .create()
     }
     //undo
