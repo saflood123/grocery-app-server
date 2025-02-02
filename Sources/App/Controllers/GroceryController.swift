@@ -97,7 +97,7 @@ class GroceryController: RouteCollection {
             //decoding // groceryItemRequestDTo
             let exerciseRequestDTO = try req.content.decode(ExerciseRequestDTO.self)
             
-            let exerciseItem = ExerciseItem(gender: exerciseRequestDTO.gender, age: exerciseRequestDTO.age, weight: exerciseRequestDTO.weight, userId: <#T##UUID#>)
+            let exerciseItem = ExerciseItem(gender: exerciseRequestDTO.gender, age: exerciseRequestDTO.age, weight: exerciseRequestDTO.weight, userId: userId)
             
             
             try await exerciseItem.save(on: req.db)
