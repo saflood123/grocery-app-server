@@ -16,17 +16,17 @@ final class Exercise: Model, Content {
     @ID(key: .id)
     var id: UUID?
     
-    @Field(key: "exerciseName")
-    var exerciseName: String
+    @Field(key: "exercisename")
+    var exercisename: String
     
     @Field(key: "category")
     var category: String
     
     init() {}
     
-    init(id: UUID? = nil, exerciseName: String, category: String) {
+    init(id: UUID? = nil, exercisename: String, category: String) {
         self.id = id
-        self.exerciseName = exerciseName
+        self.exercisename = exercisename
         self.category = category
         
     }
