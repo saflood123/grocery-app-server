@@ -7,7 +7,7 @@
 import Foundation
 import Fluent
 
-class CreateGroceryItemTableMigration2: AsyncMigration {
+class CreateGroceryItem2TableMigration: AsyncMigration {
     func prepare(on database: Database) async throws {
         try await database.schema("grocery_items2")
             .id()
