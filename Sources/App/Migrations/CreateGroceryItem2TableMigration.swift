@@ -14,7 +14,9 @@ class CreateGroceryItem2TableMigration: AsyncMigration {
             .field("title", .string,  .required)
             .field("price", .double, .required)
             .field("quantity", .int, .required)
+            .field("dateofbirth", .string, .required)
             .field("grocery_category_id", .uuid, .required, .references("grocery_categories","id", onDelete: .cascade))
+           // .field("grocery_category_id", .uuid, .required, .references("grocery_categories","id", onDelete: .cascade))
             .create()
     }
     func revert(on database: any Database) async throws {

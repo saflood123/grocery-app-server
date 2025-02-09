@@ -88,8 +88,8 @@ class GroceryController: RouteCollection {
                 throw Abort(.notFound)
             }
             //decoding // groceryItemRequestDTo
-            let groceryItem2RequestDTO = try req.content.decode(GroceryItemRequestDTO.self)
-            let groceryItem2 = GroceryItem2(title: groceryItem2RequestDTO.title, price: groceryItem2RequestDTO.price, quantity: groceryItem2RequestDTO.quantity, groceryCategoryId: groceryCategory.id!)
+            let groceryItem2RequestDTO = try req.content.decode(GroceryItem2RequestDTO.self)
+            let groceryItem2 = GroceryItem2(title: groceryItem2RequestDTO.title, price: groceryItem2RequestDTO.price, quantity: groceryItem2RequestDTO.quantity,dateofbirth: groceryItem2RequestDTO.dateofbirth, groceryCategoryId: groceryCategory.id!)
             
             try await groceryItem2.save(on: req.db)
             

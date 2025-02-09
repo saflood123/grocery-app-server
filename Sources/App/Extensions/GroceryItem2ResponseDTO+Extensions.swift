@@ -16,6 +16,6 @@ extension GroceryItem2ResponseDTO: Content {
         guard let groceryItemId = groceryItem.id else {
             return nil
             }
-        self.init(id: groceryItemId, title: groceryItem.title,price: groceryItem.price, quantity: groceryItem.quantity)
+        self.init(id: groceryItemId, title: groceryItem.title,price: groceryItem.price, quantity: groceryItem.quantity, dateofbirth: groceryItem.dateofbirth)
     }
 }
