@@ -78,7 +78,6 @@ class GroceryController: RouteCollection {
         }
         func updateGroceryItem(req: Request) async throws -> GroceryItem2ResponseDTO {
        
-                
                 guard let userId = req.parameters.get("userId", as: UUID.self),
                       let groceryCategoryId = req.parameters.get("groceryCategoryId", as: UUID.self)   else {
                     throw Abort(.badRequest)
@@ -105,6 +104,7 @@ class GroceryController: RouteCollection {
                 }
                 return groceryItem2ResponseDTO
             }
+        
         func saveGroceryItem2(req: Request) async throws -> GroceryItem2ResponseDTO {
             
             guard let userId = req.parameters.get("userId", as: UUID.self),
