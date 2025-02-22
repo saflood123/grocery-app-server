@@ -251,7 +251,6 @@ class GroceryController: RouteCollection {
             // get the userId
             guard let userId = req.parameters.get("userId", as: UUID.self) else {
                 throw Abort(.badRequest)
-                
             }
             // DTO for the request
             let groceryCategoryRequestDTO = try req.content.decode(GroceryCategoryRequestDTO.self)
