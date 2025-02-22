@@ -37,6 +37,9 @@ class GroceryController: RouteCollection {
         // get: /api/users/:userid/grocery_categories/:groceryCategoryId/grocery-items
         api.get("grocery-categories", ":groceryCategoryId", "grocery-items", use: getGroceryItemsByGroceryCategory)
         
+        // get: /api/users/:userid/grocery_categories/:groceryCategoryId/grocery-items
+        api.get("grocery-categories", ":groceryCategoryId", "grocery-items2", use: getGroceryItems2ByGroceryCategory)
+        
         // DELETE /api/users/:userid/grocery_categories/:groceryCategoryId/grocery-items/"groceryitemId
         api.delete("grocery-categories", ":groceryCategoryId", "grocery-items", ":groceryItemId", use: deleteGroceryItem)
         
@@ -150,7 +153,30 @@ class GroceryController: RouteCollection {
                 .compactMap(GroceryItemResponseDTO.init)
             
         }
-        
+        func getGroceryItems2ByGroceryCategory(req: Request) async throws -> [GroceryItem2ResponseDTO] {
+            
+            guard let userId = req.parameters.get("userId", as: UUID.self),
+                  let groceryCategoryId = req.parameters.get("groceryCategoryId", as: UUID.self)
+            else {
+                throw Abort(.badRequest)
+            }
+            // validate the userId
+            guard let _ = try await User.find(userId, on: req.db) else {
+                throw Abort(.notFound)
+            }
+            //find the grocery category
+            guard let groceryCategory = try await GroceryCategory.query(on: req.db)
+                .filter(\.$user.$id == userId)
+                .filter(\.$id == groceryCategoryId)
+                .first() else {
+                throw Abort(.notFound)
+            }
+            return try await GroceryItem2.query(on: req.db)
+                .filter(\.$groceryCategory.$id == groceryCategory.id!)
+                .all()
+                .compactMap(GroceryItem2ResponseDTO.init)
+            
+        }
         
         func deleteGroceryCategory(req: Request) async throws -> GroceryCategoryResponseDTO {
             
