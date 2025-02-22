@@ -32,7 +32,6 @@ class GroceryController: RouteCollection {
         api.post("grocery-categories", ":groceryCategoryId", "grocery-items", use: saveGroceryItem)
         
         // put: /api/users/:userid/grocery_categories/:groceryCategoryId/grocery-items
-        //have add this line
         api.put("grocery-categories", ":groceryCategoryId", "grocery-items", use: updateGroceryItem)
         
         // post: /api/users/:userid/grocery_categories/:groceryCategoryId/grocery-items
@@ -77,6 +76,7 @@ class GroceryController: RouteCollection {
             }
             return groceryItemResponseDTO
         }
+        
         func updateGroceryItem(req: Request) async throws -> GroceryItem2ResponseDTO {
        
                 guard let userId = req.parameters.get("userId", as: UUID.self),
@@ -264,10 +264,6 @@ class GroceryController: RouteCollection {
             guard let groceryCategoryResponseDTO = GroceryCategoryResponseDTO(groceryCategory) else {
                 throw Abort(.internalServerError)
             }
-            
-            
-            //DTO for the response
-            
             
             return groceryCategoryResponseDTO
         }
