@@ -109,11 +109,14 @@ class GroceryController: RouteCollection {
             try await groceryItem.update(on: req.db)
           //  return groceryItem
             
-            guard let groceryItemResponseDTO = GroceryItemResponseDTO(groceryItem) else {
+//            guard let groceryItemResponseDTO = GroceryItemResponseDTO(groceryItem) else {
+//                throw Abort(.internalServerError)
+//            }
+//            return groceryItemResponseDTO
+            guard let groceryItem = GroceryItemResponseDTO(groceryItem) else {
                 throw Abort(.internalServerError)
             }
-            return groceryItemResponseDTO
-            
+            return groceryItem
         }
         
         func updateGroceryItem2(req: Request) async throws -> GroceryItem2ResponseDTO {
