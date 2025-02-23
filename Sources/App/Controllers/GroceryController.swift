@@ -79,6 +79,7 @@ class GroceryController: RouteCollection {
             }
             return groceryItemResponseDTO
         }
+        
         func updateGroceryItem(req: Request) async throws -> GroceryItemResponseDTO {
                 guard let userId = req.parameters.get("userId", as: UUID.self),
                       let groceryCategoryId = req.parameters.get("groceryCategoryId", as: UUID.self)   else {
