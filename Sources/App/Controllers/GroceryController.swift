@@ -32,7 +32,10 @@ class GroceryController: RouteCollection {
         api.post("grocery-categories", ":groceryCategoryId", "grocery-items", use: saveGroceryItem)
         
         // put: /api/users/:userid/grocery_categories/:groceryCategoryId/grocery-items
-        api.put("grocery-categories", ":groceryCategoryId", "grocery-items2", use: updateGroceryItem)
+        api.put("grocery-categories", ":groceryCategoryId", "grocery-items2", use: updateGroceryItem2)
+        
+        // put: /api/users/:userid/grocery_categories/:groceryCategoryId/grocery-items
+        api.put("grocery-categories", ":groceryCategoryId", "grocery-items", use: updateGroceryItem)
         
         // post: /api/users/:userid/grocery_categories/:groceryCategoryId/grocery-items
         api.post("grocery-categories", ":groceryCategoryId", "grocery-items2", use: saveGroceryItem2)
@@ -76,8 +79,35 @@ class GroceryController: RouteCollection {
             }
             return groceryItemResponseDTO
         }
+        func updateGroceryItem(req: Request) async throws -> GroceryItemResponseDTO {
+                guard let userId = req.parameters.get("userId", as: UUID.self),
+                      let groceryCategoryId = req.parameters.get("groceryCategoryId", as: UUID.self)   else {
+                    throw Abort(.badRequest)
+                }
+                //find the user
+                guard let _ = try await User.find(userId, on: req.db) else {
+                    throw Abort(.notFound)
+                }
+                //find the grocery category
+                guard let groceryCategory = try await GroceryCategory.query(on: req.db)
+                    .filter(\.$user.$id == userId)
+                    .filter(\.$id == groceryCategoryId)
+                    .first() else {
+                    throw Abort(.notFound)
+                }
+                //decoding // groceryItemRequestDTo
+                let groceryItemRequestDTO = try req.content.decode(GroceryItemRequestDTO.self)
+                let groceryItem = GroceryItem(title: groceryItemRequestDTO.title, price: groceryItemRequestDTO.price, quantity: groceryItemRequestDTO.quantity, groceryCategoryId: groceryCategory.id!)
+                
+            try await groceryItem.update(on: req.db)
+                
+                guard let groceryItemResponseDTO = GroceryItemResponseDTO(groceryItem) else {
+                    throw Abort(.internalServerError)
+                }
+                return groceryItemResponseDTO
+            }
         
-        func updateGroceryItem(req: Request) async throws -> GroceryItem2ResponseDTO {
+        func updateGroceryItem2(req: Request) async throws -> GroceryItem2ResponseDTO {
                 guard let userId = req.parameters.get("userId", as: UUID.self),
                       let groceryCategoryId = req.parameters.get("groceryCategoryId", as: UUID.self)   else {
                     throw Abort(.badRequest)
