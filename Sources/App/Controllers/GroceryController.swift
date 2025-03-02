@@ -116,7 +116,7 @@ class GroceryController: RouteCollection {
             guard let groceryItem = GroceryItemResponseDTO(groceryItem) else {
                 throw Abort(.internalServerError)
             }
-            return groceryItem
+            return groceryItem  	
         }
         
         func updateGroceryItem2(req: Request) async throws -> GroceryItem2ResponseDTO {
@@ -137,7 +137,7 @@ class GroceryController: RouteCollection {
                 }
                 //decoding // groceryItemRequestDTo
                 let groceryItem2RequestDTO = try req.content.decode(GroceryItem2RequestDTO.self)
-                let groceryItem2 = GroceryItem2(title: groceryItem2RequestDTO.title, price: groceryItem2RequestDTO.price, quantity: groceryItem2RequestDTO.quantity,dateofbirth: groceryItem2RequestDTO.dateofbirth, groceryCategoryId: groceryCategory.id!)
+            let groceryItem2 = GroceryItem2(title: groceryItem2RequestDTO.title, price: groceryItem2RequestDTO.price, quantity: groceryItem2RequestDTO.quantity,dateofbirth: groceryItem2RequestDTO.dateofbirth, groceryCategoryId: groceryCategory.id!,date_updated: groceryItem2RequestDTO.date_updated)
                 
             try await groceryItem2.update(on: req.db)
                 
@@ -166,7 +166,7 @@ class GroceryController: RouteCollection {
             }
             //decoding // groceryItemRequestDTo
             let groceryItem2RequestDTO = try req.content.decode(GroceryItem2RequestDTO.self)
-            let groceryItem2 = GroceryItem2(title: groceryItem2RequestDTO.title, price: groceryItem2RequestDTO.price, quantity: groceryItem2RequestDTO.quantity,dateofbirth: groceryItem2RequestDTO.dateofbirth, groceryCategoryId: groceryCategory.id!)
+            let groceryItem2 = GroceryItem2(title: groceryItem2RequestDTO.title, price: groceryItem2RequestDTO.price, quantity: groceryItem2RequestDTO.quantity,dateofbirth: groceryItem2RequestDTO.dateofbirth, groceryCategoryId: groceryCategory.id!,date_updated: groceryItem2RequestDTO.date_updated)
             
             try await groceryItem2.save(on: req.db)
             

@@ -26,6 +26,9 @@ final class GroceryItem2: Model {
     @Field(key: "dateofbirth")
     var dateofbirth: String
     
+    @Field(key: "date_updated")
+    var date_updated: Date
+    
     @Parent(key: "grocery_category_id")
     var groceryCategory: GroceryCategory
     
@@ -33,13 +36,15 @@ final class GroceryItem2: Model {
         
     }
     
-    init(id: UUID? = nil, title: String, price: Double, quantity: Int, dateofbirth: String, groceryCategoryId: UUID) {
+    init(id: UUID? = nil, title: String, price: Double, quantity: Int, dateofbirth: String, groceryCategoryId: UUID,
+         date_updated: Date) {
         self.id = id
         self.title = title
         self.price = price
         self.quantity = quantity
         self.dateofbirth = dateofbirth
         self.$groceryCategory.id = groceryCategoryId
+        self.date_updated = date_updated
         
         
     }
