@@ -228,62 +228,33 @@ class GroceryController: RouteCollection {
                 .compactMap(GroceryItemResponseDTO.init)
             
         }
-//        func getGroceryItems2ByGroceryCategory(req: Request) async throws -> [GroceryItem2ResponseDTO] {
-//            
-//            guard let userId = req.parameters.get("userId", as: UUID.self),
-//                  let groceryCategoryId = req.parameters.get("groceryCategoryId", as: UUID.self)
-//            else {
-//                throw Abort(.badRequest)
-//            }
-//            // validate the userId
-//            guard let _ = try await User.find(userId, on: req.db) else {
-//                throw Abort(.notFound)
-//            }
-//            //find the grocery category
-//            guard let groceryCategory = try await GroceryCategory.query(on: req.db)
-//                .filter(\.$user.$id == userId)
-//                .filter(\.$id == groceryCategoryId)
-//              //  .sort(\.$date_updated, .descending)
-//                .first() else {
-//                throw Abort(.notFound)
-//            }
-//            return try await GroceryItem2.query(on: req.db)
-//                .filter(\.$groceryCategory.$id == groceryCategory.id!)
-//               
-//                .all()
-//                .compactMap(GroceryItem2ResponseDTO.init)
-//            
-//        }
-        func getGroceryItems2ByGroceryCategory(req: Request) async throws -> GroceryItem2ResponseDTO {
+        func getGroceryItems2ByGroceryCategory(req: Request) async throws -> [GroceryItem2ResponseDTO] {
             
             guard let userId = req.parameters.get("userId", as: UUID.self),
                   let groceryCategoryId = req.parameters.get("groceryCategoryId", as: UUID.self)
             else {
                 throw Abort(.badRequest)
             }
-
-            // Validate the userId
+            // validate the userId
             guard let _ = try await User.find(userId, on: req.db) else {
                 throw Abort(.notFound)
             }
-
-            // Find the grocery category
+            //find the grocery category
             guard let groceryCategory = try await GroceryCategory.query(on: req.db)
                 .filter(\.$user.$id == userId)
                 .filter(\.$id == groceryCategoryId)
+              //  .sort(\.$date_updated, .descending)
                 .first() else {
                 throw Abort(.notFound)
             }
-
-            // Retrieve the first grocery item in the category
-            guard let groceryItem = try await GroceryItem2.query(on: req.db)
+            return try await GroceryItem2.query(on: req.db)
                 .filter(\.$groceryCategory.$id == groceryCategory.id!)
-                .first() else {
-                throw Abort(.notFound)  // If no grocery item is found
-            }
-
-            return GroceryItem2ResponseDTO(groceryItem)!
+               
+                .all()
+                .compactMap(GroceryItem2ResponseDTO.init)
+            
         }
+  
 
         
 
