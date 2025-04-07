@@ -49,7 +49,7 @@ class GroceryController: RouteCollection {
         // DELETE /api/users/:userid/grocery_categories/:groceryCategoryId/grocery-items/"groceryitemId
         api.delete("grocery-categories", ":groceryCategoryId", "grocery-items", ":groceryItemId", use: deleteGroceryItem)
         
-        
+        api.delete("grocery-categories", ":groceryCategoryId", "grocery-items2", ":groceryItemId", use: deleteGroceryItem2)
         
         func saveGroceryItem(req: Request) async throws -> GroceryItemResponseDTO {
             
@@ -203,7 +203,33 @@ class GroceryController: RouteCollection {
             }
             return groceryItemResponseDTO
         }
-        
+        func deleteGroceryItem2(req: Request) async throws -> GroceryItem2ResponseDTO {
+            
+            guard let userId = req.parameters.get("userId", as: UUID.self),
+                  let groceryCategoryId = req.parameters.get("groceryCategoryId", as: UUID.self),
+                  let groceryItemId = req.parameters.get("groceryItemId", as: UUID.self)
+            else {
+                throw Abort(.badRequest)
+            }
+            guard let groceryCategory = try await GroceryCategory.query(on: req.db)
+                .filter(\.$user.$id == userId)
+                .filter(\.$id == groceryCategoryId)
+                .first() else {
+                throw Abort(.notFound)
+            }
+            guard let groceryItem = try await GroceryItem2.query(on: req.db)
+                .filter(\.$id == groceryItemId)
+                .filter(\.$groceryCategory.$id == groceryCategory.id!)
+                .first() else {
+                throw Abort(.notFound)
+            }
+            try await groceryItem.delete(on: req.db)
+            
+            guard let groceryItem2ResponseDTO = GroceryItem2ResponseDTO(groceryItem) else {
+                throw Abort(.internalServerError)
+            }
+            return groceryItem2ResponseDTO
+        }
         func getGroceryItemsByGroceryCategory(req: Request) async throws -> [GroceryItemResponseDTO] {
             
             guard let userId = req.parameters.get("userId", as: UUID.self),
@@ -249,7 +275,6 @@ class GroceryController: RouteCollection {
             }
             return try await GroceryItem2.query(on: req.db)
                 .filter(\.$groceryCategory.$id == groceryCategory.id!)
-               
                 .all()
                 .compactMap(GroceryItem2ResponseDTO.init)
             
