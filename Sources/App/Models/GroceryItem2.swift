@@ -23,6 +23,12 @@ final class GroceryItem2: Model {
     @Field(key: "quantity")
     var quantity: Int
     
+    @Field(key: "calories")
+    var calories: Int
+    
+    @Field(key: "steps")
+    var steps: Int
+    
     @Field(key: "dateofbirth")
     var dateofbirth: String
     
@@ -42,6 +48,8 @@ final class GroceryItem2: Model {
         self.title = title
         self.price = price
         self.quantity = quantity
+        self.calories = calories
+        self.steps = steps
         self.dateofbirth = dateofbirth
         self.$groceryCategory.id = groceryCategoryId
         self.date_updated = date_updated
