@@ -11,7 +11,7 @@ import Vapor
 
 final class Exercise: Model, Content {
     
-    static let schema = "exercises"
+    static let schema = "exercise_items"
     
     @ID(key: .id)
     var id: UUID?
