@@ -51,6 +51,9 @@ class GroceryController: RouteCollection {
         
         api.delete("grocery-categories", ":groceryCategoryId", "grocery-items2", ":groceryItemId", use: deleteGroceryItem2)
         
+        // post: /api/users/:userid/grocery_categories/:groceryCategoryId/grocery-items
+        api.post("grocery-categories", ":groceryCategoryId", "exercises", use: saveExercise)
+        
         func saveGroceryItem(req: Request) async throws -> GroceryItemResponseDTO {
             
             guard let userId = req.parameters.get("userId", as: UUID.self),
@@ -340,6 +343,37 @@ class GroceryController: RouteCollection {
             }
             
             return groceryCategoryResponseDTO
+        }
+        
+        func saveExercise(req: Request) async throws -> ExerciseResponseDTO {
+            // get the userId
+            guard let userId = req.parameters.get("userId", as: UUID.self) else {
+                throw Abort(.badRequest)
+            }
+            
+            // validate the user exists
+            guard let _ = try await User.find(userId, on: req.db) else {
+                throw Abort(.notFound)
+            }
+            
+            // decode the request
+            let exerciseRequestDTO = try req.content.decode(ExerciseItem.self)
+            
+            // create the exercise item
+            let exerciseItem = ExerciseItem(
+                gender: exerciseRequestDTO.gender,
+                age: exerciseRequestDTO.age,
+                weight: exerciseRequestDTO.weight,
+                userId: userId
+            )
+            
+            try await exerciseItem.save(on: req.db)
+            
+            guard let exerciseResponseDTO = ExerciseResponseDTO(exerciseItem) else {
+                throw Abort(.internalServerError)
+            }
+            
+            return exerciseResponseDTO
         }
     }
 }
