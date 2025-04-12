@@ -104,52 +104,52 @@ class GroceryController: RouteCollection {
             {
                 throw Abort(.notFound)
             }
-
+            
             let updateGroceryItem = try req.content.decode(GroceryItem.self)
             
             groceryItem.title = updateGroceryItem.title
             
             try await groceryItem.update(on: req.db)
-          //  return groceryItem
+            //  return groceryItem
             
-//            guard let groceryItemResponseDTO = GroceryItemResponseDTO(groceryItem) else {
-//                throw Abort(.internalServerError)
-//            }
-//            return groceryItemResponseDTO
+            //            guard let groceryItemResponseDTO = GroceryItemResponseDTO(groceryItem) else {
+            //                throw Abort(.internalServerError)
+            //            }
+            //            return groceryItemResponseDTO
             guard let groceryItem = GroceryItemResponseDTO(groceryItem) else {
                 throw Abort(.internalServerError)
             }
-            return groceryItem  	
+            return groceryItem
         }
         
         func updateGroceryItem2(req: Request) async throws -> GroceryItem2ResponseDTO {
-                guard let userId = req.parameters.get("userId", as: UUID.self),
-                      let groceryCategoryId = req.parameters.get("groceryCategoryId", as: UUID.self)   else {
-                    throw Abort(.badRequest)
-                }
-                //find the user
-                guard let _ = try await User.find(userId, on: req.db) else {
-                    throw Abort(.notFound)
-                }
-                //find the grocery category
-                guard let groceryCategory = try await GroceryCategory.query(on: req.db)
-                    .filter(\.$user.$id == userId)
-                    .filter(\.$id == groceryCategoryId)
-                    //.sort(\.$date_updated, .descending)
-                    .first() else {
-                    throw Abort(.notFound)
-                }
-                //decoding // groceryItemRequestDTo
-                let groceryItem2RequestDTO = try req.content.decode(GroceryItem2RequestDTO.self)
-            let groceryItem2 = GroceryItem2(title: groceryItem2RequestDTO.title, price: groceryItem2RequestDTO.price, quantity: groceryItem2RequestDTO.quantity, calories: groceryItem2RequestDTO.calories, steps: groceryItem2RequestDTO.steps,dateofbirth: groceryItem2RequestDTO.dateofbirth, groceryCategoryId: groceryCategory.id!,date_updated: groceryItem2RequestDTO.date_updated)
-                
-            try await groceryItem2.update(on: req.db)
-                
-                guard let groceryItem2ResponseDTO = GroceryItem2ResponseDTO(groceryItem2) else {
-                    throw Abort(.internalServerError)
-                }
-                return groceryItem2ResponseDTO
+            guard let userId = req.parameters.get("userId", as: UUID.self),
+                  let groceryCategoryId = req.parameters.get("groceryCategoryId", as: UUID.self)   else {
+                throw Abort(.badRequest)
             }
+            //find the user
+            guard let _ = try await User.find(userId, on: req.db) else {
+                throw Abort(.notFound)
+            }
+            //find the grocery category
+            guard let groceryCategory = try await GroceryCategory.query(on: req.db)
+                .filter(\.$user.$id == userId)
+                .filter(\.$id == groceryCategoryId)
+                    //.sort(\.$date_updated, .descending)
+                .first() else {
+                throw Abort(.notFound)
+            }
+            //decoding // groceryItemRequestDTo
+            let groceryItem2RequestDTO = try req.content.decode(GroceryItem2RequestDTO.self)
+            let groceryItem2 = GroceryItem2(title: groceryItem2RequestDTO.title, price: groceryItem2RequestDTO.price, quantity: groceryItem2RequestDTO.quantity, calories: groceryItem2RequestDTO.calories, steps: groceryItem2RequestDTO.steps,dateofbirth: groceryItem2RequestDTO.dateofbirth, groceryCategoryId: groceryCategory.id!,date_updated: groceryItem2RequestDTO.date_updated)
+            
+            try await groceryItem2.update(on: req.db)
+            
+            guard let groceryItem2ResponseDTO = GroceryItem2ResponseDTO(groceryItem2) else {
+                throw Abort(.internalServerError)
+            }
+            return groceryItem2ResponseDTO
+        }
         
         func saveGroceryItem2(req: Request) async throws -> GroceryItem2ResponseDTO {
             
@@ -178,6 +178,34 @@ class GroceryController: RouteCollection {
                 throw Abort(.internalServerError)
             }
             return groceryItem2ResponseDTO
+        }
+        func saveExercise(req: Request) async throws -> ExerciseResponseDTO {
+            
+            guard let userId = req.parameters.get("userId", as: UUID.self),
+                  let groceryCategoryId = req.parameters.get("groceryCategoryId", as: UUID.self)   else {
+                throw Abort(.badRequest)
+            }
+            //find the user
+            guard let _ = try await User.find(userId, on: req.db) else {
+                throw Abort(.notFound)
+            }
+            //find the grocery category
+            guard let groceryCategory = try await GroceryCategory.query(on: req.db)
+                .filter(\.$user.$id == userId)
+                .filter(\.$id == groceryCategoryId)
+                .first() else {
+                throw Abort(.notFound)
+            }
+            //decoding // groceryItemRequestDTo
+            let exerciseRequestDTO = try req.content.decode(ExerciseRequestDTO.self)
+            let exerciseItem = ExerciseItem(gender: exerciseRequestDTO.gender,age: exerciseRequestDTO.age, weight: exerciseRequestDTO.weight)
+            
+            try await exerciseItem.save(on: req.db)
+            
+            guard let exerciseResponseDTO = ExerciseResponseDTO(exerciseItem) else {
+                throw Abort(.internalServerError)
+            }
+            return exerciseResponseDTO
         }
         func deleteGroceryItem(req: Request) async throws -> GroceryItemResponseDTO {
             
@@ -272,7 +300,7 @@ class GroceryController: RouteCollection {
             guard let groceryCategory = try await GroceryCategory.query(on: req.db)
                 .filter(\.$user.$id == userId)
                 .filter(\.$id == groceryCategoryId)
-              //  .sort(\.$date_updated, .descending)
+                    //  .sort(\.$date_updated, .descending)
                 .first() else {
                 throw Abort(.notFound)
             }
@@ -282,12 +310,12 @@ class GroceryController: RouteCollection {
                 .compactMap(GroceryItem2ResponseDTO.init)
             
         }
-  
-
         
-
-      
-
+        
+        
+        
+        
+        
         
         func deleteGroceryCategory(req: Request) async throws -> GroceryCategoryResponseDTO {
             
@@ -345,35 +373,37 @@ class GroceryController: RouteCollection {
             return groceryCategoryResponseDTO
         }
         
-        func saveExercise(req: Request) async throws -> ExerciseResponseDTO {
-            // get the userId
-            guard let userId = req.parameters.get("userId", as: UUID.self) else {
-                throw Abort(.badRequest)
-            }
-            
-            // validate the user exists
-            guard let _ = try await User.find(userId, on: req.db) else {
-                throw Abort(.notFound)
-            }
-            
-            // decode the request
-            let exerciseRequestDTO = try req.content.decode(ExerciseItem.self)
-            
-            // create the exercise item
-            let exerciseItem = ExerciseItem(
-                gender: exerciseRequestDTO.gender,
-                age: exerciseRequestDTO.age,
-                weight: exerciseRequestDTO.weight,
-                userId: userId
-            )
-            
-            try await exerciseItem.save(on: req.db)
-            
-            guard let exerciseResponseDTO = ExerciseResponseDTO(exerciseItem) else {
-                throw Abort(.internalServerError)
-            }
-            
-            return exerciseResponseDTO
-        }
+        //        func saveExercise(req: Request) async throws -> ExerciseResponseDTO {
+        //            // get the userId
+        //            guard let userId = req.parameters.get("userId", as: UUID.self) else {
+        //                throw Abort(.badRequest)
+        //            }
+        //
+        //            // validate the user exists
+        //                guard let _ = try await User.find(userId, on: req.db) else {
+        //                throw Abort(.notFound)
+        //            }
+        //
+        //            // decode the request
+        //            let exerciseRequestDTO = try req.content.decode(ExerciseItem.self)
+        //
+        //            // create the exercise item
+        //            let exerciseItem = ExerciseItem(
+        //                gender: exerciseRequestDTO.gender,
+        //                age: exerciseRequestDTO.age,
+        //                weight: exerciseRequestDTO.weight,
+        //                userId: userId
+        //            )
+        //
+        //            try await exerciseItem.save(on: req.db)
+        //
+        //            guard let exerciseResponseDTO = ExerciseResponseDTO(exerciseItem) else {
+        //                throw Abort(.internalServerError)
+        //            }
+        //
+        //            return exerciseResponseDTO
+        //        }
+        //    }
+      
     }
 }

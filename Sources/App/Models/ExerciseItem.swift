@@ -23,18 +23,18 @@ final class ExerciseItem: Model {
     @Field(key: "weight")
     var weight: Float
     
-    @Parent(key: "user_id")
-    var user: User
+//    @Parent(key: "user_id")
+//    var user: User
     
     init() {
         
     }
    // init(id: UUID? = nil, gender: String, age: Int, weight: Float, groceryCategoryId: UUID) {
-    init(id: UUID? = nil, gender: String, age: Int, weight: Float, userId: UUID) {
+    init(id: UUID? = nil, gender: String, age: Int, weight: Float) {
         self.gender = gender
         self.age = age
         self.weight = weight
-        self.$user.id = userId
+      //  self.$user.id = userId
         
         
     }
