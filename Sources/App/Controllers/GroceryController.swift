@@ -51,8 +51,8 @@ class GroceryController: RouteCollection {
         
         api.delete("grocery-categories", ":groceryCategoryId", "grocery-items2", ":groceryItemId", use: deleteGroceryItem2)
         
-        // post: /api/users/:userid/grocery_categories/:groceryCategoryId/grocery-items
-        api.post("grocery-categories", ":groceryCategoryId", "exercise_items", use: saveExercise)
+        // post: /api/users/:userid/grocery_categories/:groceryCategoryId/exercise-items
+        api.post("grocery-categories", ":groceryCategoryId", "exercise-items", use: saveExercise)
         
         func saveGroceryItem(req: Request) async throws -> GroceryItemResponseDTO {
             
