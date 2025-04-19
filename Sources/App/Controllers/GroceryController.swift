@@ -37,9 +37,12 @@ class GroceryController: RouteCollection {
         // put: /api/users/:userid/grocery_categories/:groceryCategoryId/grocery-items
         api.put("grocery-categories", ":groceryCategoryId", "grocery-items", use: updateGroceryItem)
         
-        // post: /api/users/:userid/grocery_categories/:groceryCategoryId/grocery-items
+        // post: /api/users/:userid/grocery_categories/:groceryCategoryId/grocery-items2
         api.post("grocery-categories", ":groceryCategoryId", "grocery-items2", use: saveGroceryItem2)
         
+        // post: /api/users/:userid/grocery_categories/:groceryCategoryId/grocery-items3
+        api.post("grocery-categories", ":groceryCategoryId", "grocery-items3", use: saveGroceryItem2)
+     
         // get: /api/users/:userid/grocery_categories/:groceryCategoryId/grocery-items
         api.get("grocery-categories", ":groceryCategoryId", "grocery-items", use: getGroceryItemsByGroceryCategory)
         
