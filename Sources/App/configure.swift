@@ -34,6 +34,7 @@ public func configure(_ app: Application) async throws {
     app.migrations.add(CreateGroceryCategoryTableMigration())
     app.migrations.add(CreateGroceryItemTableMigration())
     app.migrations.add(CreateGroceryItem2TableMigration())
+    app.migrations.add(CreateGroceryItem3TableMigration())
     //app.migrations.add(CreateExerciseTypeMigration())
     app.migrations.add(CreateExerciseTypeTableMigration())
     
