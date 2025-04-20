@@ -200,7 +200,7 @@ class GroceryController: RouteCollection {
                 throw Abort(.notFound)
             }
             //decoding // groceryItemRequestDTo
-            let groceryItem3RequestDTO = try req.content.decode(GroceryItem2RequestDTO.self)
+            let groceryItem3RequestDTO = try req.content.decode(GroceryItem3RequestDTO.self)
             let groceryItem3 = GroceryItem3(title: groceryItem3RequestDTO.title, price: groceryItem3RequestDTO.price, quantity: groceryItem3RequestDTO.quantity, groceryCategoryId: groceryCategory.id!)
             
             try await groceryItem3.save(on: req.db)
