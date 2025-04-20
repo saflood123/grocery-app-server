@@ -41,7 +41,7 @@ class GroceryController: RouteCollection {
         api.post("grocery-categories", ":groceryCategoryId", "grocery-items2", use: saveGroceryItem2)
         
         // post: /api/users/:userid/grocery_categories/:groceryCategoryId/grocery-items3
-        api.post("grocery-categories", ":groceryCategoryId", "grocery-items3", use: saveGroceryItem2)
+        api.post("grocery-categories", ":groceryCategoryId", "grocery-items3", use: saveGroceryItem3)
      
         // get: /api/users/:userid/grocery_categories/:groceryCategoryId/grocery-items
         api.get("grocery-categories", ":groceryCategoryId", "grocery-items", use: getGroceryItemsByGroceryCategory)
@@ -182,7 +182,7 @@ class GroceryController: RouteCollection {
             }
             return groceryItem2ResponseDTO
         }
-        func saveGroceryItem3(req: Request) async throws -> GroceryItem2ResponseDTO {
+        func saveGroceryItem3(req: Request) async throws -> GroceryItem3ResponseDTO {
             
             guard let userId = req.parameters.get("userId", as: UUID.self),
                   let groceryCategoryId = req.parameters.get("groceryCategoryId", as: UUID.self)   else {
@@ -200,15 +200,15 @@ class GroceryController: RouteCollection {
                 throw Abort(.notFound)
             }
             //decoding // groceryItemRequestDTo
-            let groceryItem2RequestDTO = try req.content.decode(GroceryItem2RequestDTO.self)
-            let groceryItem2 = GroceryItem2(title: groceryItem2RequestDTO.title, price: groceryItem2RequestDTO.price, quantity: groceryItem2RequestDTO.quantity, calories: groceryItem2RequestDTO.calories,steps: groceryItem2RequestDTO.steps,dateofbirth: groceryItem2RequestDTO.dateofbirth, groceryCategoryId: groceryCategory.id!,date_updated: groceryItem2RequestDTO.date_updated)
+            let groceryItem3RequestDTO = try req.content.decode(GroceryItem2RequestDTO.self)
+            let groceryItem3 = GroceryItem3(title: groceryItem3RequestDTO.title, price: groceryItem3RequestDTO.price, quantity: groceryItem3RequestDTO.quantity, groceryCategoryId: groceryCategory.id!)
             
-            try await groceryItem2.save(on: req.db)
+            try await groceryItem3.save(on: req.db)
             
-            guard let groceryItem2ResponseDTO = GroceryItem2ResponseDTO(groceryItem2) else {
+            guard let groceryItem3ResponseDTO = GroceryItem3ResponseDTO(groceryItem3) else {
                 throw Abort(.internalServerError)
             }
-            return groceryItem2ResponseDTO
+            return groceryItem3ResponseDTO
         }
         func saveExercise(req: Request) async throws -> ExerciseResponseDTO {
             

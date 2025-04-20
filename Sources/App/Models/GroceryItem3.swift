@@ -42,8 +42,7 @@ final class GroceryItem3: Model {
         
     }
     
-    init(id: UUID? = nil, title: String, price: Double, quantity: Int, calories: Int, steps: Int, dateofbirth: String, groceryCategoryId: UUID,
-         date_updated: String) {
+    init(id: UUID? = nil, title: String, price: Double, quantity: Int, groceryCategoryId: UUID) {
         self.id = id
         self.title = title
         self.price = price

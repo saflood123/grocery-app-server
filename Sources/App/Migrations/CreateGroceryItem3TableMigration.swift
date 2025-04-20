@@ -13,7 +13,7 @@ class CreateGroceryItem3TableMigration: AsyncMigration {
             .id()
             .field("title", .string,  .required)
             .field("price", .double, .required)
-//            .field("quantity", .int, .required)
+            .field("quantity", .int, .required)
 //            .field("calories", .int, .required)
 //            .field("steps", .int, .required)
 //            .field("dateofbirth", .string)
