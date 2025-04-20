@@ -43,6 +43,9 @@ class GroceryController: RouteCollection {
         // post: /api/users/:userid/grocery_categories/:groceryCategoryId/grocery-items3
         api.post("grocery-categories", ":groceryCategoryId", "grocery-items3", use: saveGroceryItem3)
      
+        // post: /api/users/:userid/grocery_categories/:groceryCategoryId/grocery-items3
+        api.post("grocery-categories", ":groceryCategoryId", "grocery-items4", use: saveGroceryItem4)
+     
         // get: /api/users/:userid/grocery_categories/:groceryCategoryId/grocery-items
         api.get("grocery-categories", ":groceryCategoryId", "grocery-items", use: getGroceryItemsByGroceryCategory)
         
@@ -209,6 +212,34 @@ class GroceryController: RouteCollection {
                 throw Abort(.internalServerError)
             }
             return groceryItem3ResponseDTO
+        }
+        func saveGroceryItem4(req: Request) async throws -> GroceryItem4ResponseDTO {
+            
+            guard let userId = req.parameters.get("userId", as: UUID.self),
+                  let groceryCategoryId = req.parameters.get("groceryCategoryId", as: UUID.self)   else {
+                throw Abort(.badRequest)
+            }
+            //find the user
+            guard let _ = try await User.find(userId, on: req.db) else {
+                throw Abort(.notFound)
+            }
+            //find the grocery category
+            guard let groceryCategory = try await GroceryCategory.query(on: req.db)
+                .filter(\.$user.$id == userId)
+                .filter(\.$id == groceryCategoryId)
+                .first() else {
+                throw Abort(.notFound)
+            }
+            //decoding // groceryItemRequestDTo
+            let groceryItem4RequestDTO = try req.content.decode(GroceryItem4RequestDTO.self)
+            let groceryItem4 = GroceryItem4(title: groceryItem4RequestDTO.title, price: groceryItem4RequestDTO.price, quantity: groceryItem4RequestDTO.quantity, groceryCategoryId: groceryCategory.id!)
+            
+            try await groceryItem4.save(on: req.db)
+            
+            guard let groceryItem4ResponseDTO = GroceryItem4ResponseDTO(groceryItem4) else {
+                throw Abort(.internalServerError)
+            }
+            return groceryItem4ResponseDTO
         }
         func saveExercise(req: Request) async throws -> ExerciseResponseDTO {
             
