@@ -52,6 +52,9 @@ class GroceryController: RouteCollection {
         // get: /api/users/:userid/grocery_categories/:groceryCategoryId/grocery-items
         api.get("grocery-categories", ":groceryCategoryId", "grocery-items2", use: getGroceryItems2ByGroceryCategory)
         
+        // get: /api/users/:userid/grocery_categories/:groceryCategoryId/grocery-items
+        api.get("grocery-categories", ":groceryCategoryId", "grocery-items3", use: getGroceryItems3ByGroceryCategory)
+        
         // DELETE /api/users/:userid/grocery_categories/:groceryCategoryId/grocery-items/"groceryitemId
         api.delete("grocery-categories", ":groceryCategoryId", "grocery-items", ":groceryItemId", use: deleteGroceryItem)
         
@@ -372,7 +375,30 @@ class GroceryController: RouteCollection {
                 .compactMap(GroceryItem2ResponseDTO.init)
             
         }
-        
+        func getGroceryItems3ByGroceryCategory(req: Request) async throws -> [GroceryItem3ResponseDTO] {
+            
+            guard let userId = req.parameters.get("userId", as: UUID.self),
+                  let groceryCategoryId = req.parameters.get("groceryCategoryId", as: UUID.self)
+            else {
+                throw Abort(.badRequest)
+            }
+            // validate the userId
+            guard let _ = try await User.find(userId, on: req.db) else {
+                throw Abort(.notFound)
+            }
+            //find the grocery category
+            guard let groceryCategory = try await GroceryCategory.query(on: req.db)
+                .filter(\.$user.$id == userId)
+                .filter(\.$id == groceryCategoryId)
+                .first() else {
+                throw Abort(.notFound)
+            }
+            return try await GroceryItem3.query(on: req.db)
+                .filter(\.$groceryCategory.$id == groceryCategory.id!)
+                .all()
+                .compactMap(GroceryItem3ResponseDTO.init)
+            
+        }
         
         
         
@@ -435,37 +461,6 @@ class GroceryController: RouteCollection {
             return groceryCategoryResponseDTO
         }
         
-        //        func saveExercise(req: Request) async throws -> ExerciseResponseDTO {
-        //            // get the userId
-        //            guard let userId = req.parameters.get("userId", as: UUID.self) else {
-        //                throw Abort(.badRequest)
-        //            }
-        //
-        //            // validate the user exists
-        //                guard let _ = try await User.find(userId, on: req.db) else {
-        //                throw Abort(.notFound)
-        //            }
-        //
-        //            // decode the request
-        //            let exerciseRequestDTO = try req.content.decode(ExerciseItem.self)
-        //
-        //            // create the exercise item
-        //            let exerciseItem = ExerciseItem(
-        //                gender: exerciseRequestDTO.gender,
-        //                age: exerciseRequestDTO.age,
-        //                weight: exerciseRequestDTO.weight,
-        //                userId: userId
-        //            )
-        //
-        //            try await exerciseItem.save(on: req.db)
-        //
-        //            guard let exerciseResponseDTO = ExerciseResponseDTO(exerciseItem) else {
-        //                throw Abort(.internalServerError)
-        //            }
-        //
-        //            return exerciseResponseDTO
-        //        }
-        //    }
       
     }
 }
