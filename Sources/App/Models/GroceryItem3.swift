@@ -32,11 +32,11 @@ final class GroceryItem3: Model {
 //    @Field(key: "steps")
 //    var steps: Int
 //    
-//    @Field(key: "dateofbirth")
-//    var dateofbirth: String
-//    
-//    @Field(key: "date_updated")
-//    var date_updated: String
+    @Field(key: "dateofbirth")
+    var dateofbirth: String
+    
+    @Field(key: "date_updated")
+    var date_updated: String
     
     @Parent(key: "grocery_category_id")
     var groceryCategory: GroceryCategory
@@ -45,7 +45,7 @@ final class GroceryItem3: Model {
         
     }
     
-    init(id: UUID? = nil, title: String, price: Double, quantity: Int,foodtype: String, groceryCategoryId: UUID) {
+    init(id: UUID? = nil, title: String, price: Double, quantity: Int,foodtype: String, groceryCategoryId: UUID,  dateofbirth: String,date_updated: String) {
         self.id = id
         self.title = title
         self.price = price
@@ -53,9 +53,9 @@ final class GroceryItem3: Model {
         self.foodtype = foodtype
 //        self.calories = calories
 //        self.steps = steps
-//        self.dateofbirth = dateofbirth
+        self.dateofbirth = dateofbirth
         self.$groceryCategory.id = groceryCategoryId
-//        self.date_updated = date_updated
+        self.date_updated = date_updated
         
         
     }
