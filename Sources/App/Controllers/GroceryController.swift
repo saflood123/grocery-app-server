@@ -60,6 +60,8 @@ class GroceryController: RouteCollection {
         
         api.delete("grocery-categories", ":groceryCategoryId", "grocery-items2", ":groceryItemId", use: deleteGroceryItem2)
         
+        api.delete("grocery-categories", ":groceryCategoryId", "grocery-items3", ":groceryItemId", use: deleteGroceryItem3)
+        
         // post: /api/users/:userid/grocery_categories/:groceryCategoryId/exercise-items
         api.post("grocery-categories", ":groceryCategoryId", "exercise-items", use: saveExercise)
         
@@ -325,6 +327,33 @@ class GroceryController: RouteCollection {
                 throw Abort(.internalServerError)
             }
             return groceryItem2ResponseDTO
+        }
+        func deleteGroceryItem3(req: Request) async throws -> GroceryItem3ResponseDTO {
+            
+            guard let userId = req.parameters.get("userId", as: UUID.self),
+                  let groceryCategoryId = req.parameters.get("groceryCategoryId", as: UUID.self),
+                  let groceryItemId = req.parameters.get("groceryItemId", as: UUID.self)
+            else {
+                throw Abort(.badRequest)
+            }
+            guard let groceryCategory = try await GroceryCategory.query(on: req.db)
+                .filter(\.$user.$id == userId)
+                .filter(\.$id == groceryCategoryId)
+                .first() else {
+                throw Abort(.notFound)
+            }
+            guard let groceryItem = try await GroceryItem3.query(on: req.db)
+                .filter(\.$id == groceryItemId)
+                .filter(\.$groceryCategory.$id == groceryCategory.id!)
+                .first() else {
+                throw Abort(.notFound)
+            }
+            try await groceryItem.delete(on: req.db)
+            
+            guard let groceryItem3ResponseDTO = GroceryItem3ResponseDTO(groceryItem) else {
+                throw Abort(.internalServerError)
+            }
+            return groceryItem3ResponseDTO
         }
         func getGroceryItemsByGroceryCategory(req: Request) async throws -> [GroceryItemResponseDTO] {
             
