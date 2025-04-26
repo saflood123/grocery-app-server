@@ -17,6 +17,6 @@ extension GroceryItemResponseDTO: Content {
             return nil
             }
         self.init(id: groceryItemId, title: groceryItem.title,price: groceryItem.price,
-                  quantity: groceryItem.quantity)
+                  quantity: groceryItem.quantity, dateofbirth: groceryItem.dateofbirth, date_updated: groceryItem.date_updated)
     }
 }
