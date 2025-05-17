@@ -84,7 +84,9 @@ class GroceryController: RouteCollection {
             }
             //decoding // groceryItemRequestDTo
             let groceryItemRequestDTO = try req.content.decode(GroceryItemRequestDTO.self)
-            let groceryItem = GroceryItem(title: groceryItemRequestDTO.title, price: groceryItemRequestDTO.price, quantity: groceryItemRequestDTO.quantity, groceryCategoryId: groceryCategory.id!,dateofbirth: groceryItemRequestDTO.dateofbirth, date_updated: groceryItemRequestDTO.date_updated)
+            let groceryItem = GroceryItem(title: groceryItemRequestDTO.title, price: groceryItemRequestDTO.price,
+                reps: groceryItemRequestDTO.reps,
+                quantity: groceryItemRequestDTO.quantity, groceryCategoryId: groceryCategory.id!,dateofbirth: groceryItemRequestDTO.dateofbirth, date_updated: groceryItemRequestDTO.date_updated)
             
             try await groceryItem.save(on: req.db)
             
